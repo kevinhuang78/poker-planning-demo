@@ -1,0 +1,22 @@
+.chat {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+.chat-list {
+    display: flex;
+    justify-content: flex-end;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.chat-list ul {
+    height: 150px;
+    padding-inline-start: 0px;
+}
+
+.chat-list ul > li {
+    list-style-type: none;
+    width: 350px;
+}

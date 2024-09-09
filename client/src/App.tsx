@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 
-import './app.css';
+import Chat from "./components/chat/chat";
 
 const URL = 'ws://127.0.0.1:8080';
 
-type Message = { user: string; message: string; };
+
+// https://stackoverflow.com/a/44078785
+const guid = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+export type Message = { user: string; message: string; };
 
 const App = () => {
-  const [user, setUser] = useState('Tarzan');
-  const [message, setMessage] = useState<string>('');
+  const [user, setUser] = useState(guid());
   const [messages, setMessages] = useState<Message[]>([]);
   const [ws, setWs] = useState(new WebSocket(URL));
 
@@ -19,7 +22,7 @@ const App = () => {
 
   useEffect(() => {
     ws.onopen = () => {
-      console.log('WebSocket Connected');
+      submitMessage({ user, message: 'I just logged in!' })
     }
 
     ws.onmessage = async (e) => {
@@ -30,7 +33,7 @@ const App = () => {
 
     return () => {
       ws.onclose = () => {
-        console.log('WebSocket Disconnected');
+        submitMessage({ user, message: 'I disconnected!' })
         setWs(new WebSocket(URL));
       }
     }
@@ -38,41 +41,7 @@ const App = () => {
 
   return (
     <div>
-      <label htmlFor="user">
-        Name :
-        <input
-          type="text"
-          id="user"
-          placeholder="User"
-          value={user}
-          onChange={e => setUser(e.target.value)}
-        />
-      </label>
-
-      <ul>
-        {messages.reverse().map((message, index) =>
-          <li key={index}>
-            <b>{message.user}</b>: <em>{message.message}</em>
-          </li>
-        )}
-      </ul>
-
-      <form
-        action=""
-        onSubmit={e => {
-          e.preventDefault();
-          submitMessage({ user, message });
-          setMessage('');
-        }}
-      >
-        <input
-          type="text"
-          placeholder={'Type a message ...'}
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-        />
-        <input type="submit" value={'Send'} />
-      </form>
+      <Chat messages={messages} submitMessage={submitMessage} user={user} setUser={setUser} />
     </div>
   )
 }
