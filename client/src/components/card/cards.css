@@ -32,7 +32,7 @@
 .card.isSelected {
     color: #FFF;
     background-color: #4290e5;
-    animation: rotateCard 1.5s 3;
+    animation: rotateCard 1s 2;
 }
 
 .card:hover {
