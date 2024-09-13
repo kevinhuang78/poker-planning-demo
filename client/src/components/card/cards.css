@@ -1,0 +1,40 @@
+.cards {
+    position: fixed;
+    bottom: -20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 0.5em;
+}
+
+.card {
+    border: 2px solid #4290e5;
+    border-radius: 10px;
+    color: #4290e5;
+    cursor: pointer;
+    width: 70px;
+    box-sizing: border-box;
+    text-align: center;
+
+    padding: 2.5em 1em;
+    transition: .1s ease-in-out;
+}
+
+@keyframes rotateCard {
+    0% { transform: rotate(0) translateY(0) }
+    10% { transform: rotate(0) translateY(-30px) }
+    25% { transform: rotate(15deg) translateY(-30px) }
+    75% { transform: rotate(-15deg) translateY(-30px) }
+    90% { transform: rotate(0) translateY(-30px) }
+    100% { transform: rotate(0) translateY(0) }
+}
+
+.card.isSelected {
+    color: #FFF;
+    background-color: #4290e5;
+    animation: rotateCard 1.5s 3;
+}
+
+.card:hover {
+    transform: translateY(-30px);
+}

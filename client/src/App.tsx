@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import Chat from "./components/chat/chat";
+import CardsList from "./components/card/cards-list";
 
 // https://stackoverflow.com/a/44078785
 const guid = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -20,6 +21,7 @@ const App = () => {
   const [username, setUsername] = useState(DEFAULT_USERNAME);
   const [messages, setMessages] = useState<Message[]>([]);
   const [ws, setWs] = useState(new WebSocket(URL));
+  const [selectedCard, setSelectedCard] = useState<CardEvent['value']>();
 
   const submitMessage = (message: Pick<Message, 'username' | 'message'>) => {
     const sentMessage: Message = {...message, clientId: CLIENT_ID, type: 'message'};
@@ -30,6 +32,11 @@ const App = () => {
   const onClose = () => {
     ws.send(JSON.stringify({ type: 'info', data: { disconnectedUser: CLIENT_ID } }));
     submitMessage({ username, message: 'I disconnected!' });
+  };
+
+  const setCard = (cardValue: CardEvent['value']) => {
+    setSelectedCard(cardValue)
+    // Do websocket things
   };
 
   useEffect(() => {
@@ -63,6 +70,7 @@ const App = () => {
   return (
     <div>
       <Chat messages={messages} submitMessage={submitMessage} username={username} setUsername={setUsername} clientID={CLIENT_ID} />
+      <CardsList setSelectedCard={setCard} selectedCard={selectedCard} />
       <div>
         {allUsers.map((user) => <p key={user.clientId}>{user.username || user.defaultUsername}</p>)}
       </div>
