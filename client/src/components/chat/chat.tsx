@@ -6,12 +6,12 @@ import './chat.css';
 
 type ChatProps = {
   messages: Message[];
-  submitMessage: (message: Message) => void;
-  user: Message['user'];
-  setUser: (user: Message['user']) => void;
+  submitMessage: (message: Pick<Message, 'username' | 'message'>) => void;
+  username: Message['username'];
+  setUsername: (user: Message['username']) => void;
 };
 
-const Chat = ({ messages, submitMessage, user, setUser }: ChatProps) => {
+const Chat = ({ messages, submitMessage, username, setUsername }: ChatProps) => {
   const [message, setMessage] = useState<string>('');
 
   return (
@@ -21,9 +21,9 @@ const Chat = ({ messages, submitMessage, user, setUser }: ChatProps) => {
         <input
           type="text"
           id="user"
-          placeholder="User"
-          value={user}
-          onChange={e => setUser(e.target.value)}
+          placeholder="User name"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
         />
       </label>
 
@@ -31,7 +31,7 @@ const Chat = ({ messages, submitMessage, user, setUser }: ChatProps) => {
         <ul>
           {messages.reverse().map((message, index) =>
             <li key={index}>
-              <b>{message.user}</b>: <em>{message.message}</em>
+              <b>{message.username}</b>: <em>{message.message}</em>
             </li>
           )}
         </ul>
@@ -41,7 +41,7 @@ const Chat = ({ messages, submitMessage, user, setUser }: ChatProps) => {
         action="client/src/components"
         onSubmit={e => {
           e.preventDefault();
-          submitMessage({ user, message });
+          submitMessage({ username, message });
           setMessage('');
         }}
       >
