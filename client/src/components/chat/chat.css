@@ -59,6 +59,7 @@
     overflow-y: auto;
     margin-bottom: 20px;
     border-top: 1px solid #CCC;
+    padding: 0 0.25em;
 }
 
 .chat-list ul {
