@@ -1,7 +1,56 @@
 .chat {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em 0.75em;
+    background-color: #dedede;
+    border-radius: 12px 12px 0 0;
+}
+
+.chat-header-bubbles {
+    display: flex;
+    gap: 0.25em;
+}
+
+.chat-header .chat-header-bubble:first-child { background-color: #ff5c6e; }
+.chat-header .chat-header-bubble:nth-child(2) { background-color: #ffb639; }
+.chat-header .chat-header-bubble:nth-child(3) { background-color: #00d047; }
+
+.chat-header-bubble {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    background-color: red;
+}
+
+.chat-header-right-space {
+    width: 53px;
+}
+
+.chat-box {
+    background-color: #f5f5f5;
+    border-radius: 12px;
+}
+
+.chat-username {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.5em 0.75em;
+}
+
+.chat-username > input[type=text] {
+    resize: none;
+    outline: none;
+    margin-left: 1em;
+    border-radius: 12px;
+    padding: 0.5em 2em;
+    border: 1px solid #CCC;
 }
 
 .chat-list {
@@ -9,6 +58,7 @@
     justify-content: flex-end;
     overflow-y: auto;
     margin-bottom: 20px;
+    border-top: 1px solid #CCC;
 }
 
 .chat-list ul {
@@ -19,4 +69,60 @@
 .chat-list ul > li {
     list-style-type: none;
     width: 350px;
+    max-width: 80%;
+    padding: 0.25em 0.75em;
+    margin: 0.25em;
+
+    display: flex;
+}
+
+.chat-list ul > li.sender {
+    background-color: cornflowerblue;
+    color: #FFF;
+    border-radius: 1em 1em 1em 0.1em;
+    justify-content: flex-start;
+}
+
+.chat-list ul > li.recipient {
+    background-color: #EFEFEF;
+    color: #333;
+    border-radius: 1em 1em 0.1em 1em;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.chat-input-form {
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    padding: 0 1em;
+    height: 55px;
+    margin: 0.5em 0 0;
+    background-color: #EFEFEF;
+
+    width: 350px;
+}
+
+.chat-input-form > input[type=text] {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    position: relative;
+    font-size: 13px;
+    background: transparent;
+    border: 0;
+    resize: none;
+    color: #555;
+}
+
+.chat-input-form > input[type=submit] {
+    outline: none;
+    cursor: pointer;
+    border: 0;
+    background-color: cornflowerblue;
+    color: #FFF;
+
+    width: 45px;
+    height: 45px;
+    border-radius: 45px;
 }

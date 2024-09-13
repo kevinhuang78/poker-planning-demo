@@ -62,10 +62,10 @@ const App = () => {
 
   return (
     <div>
+      <Chat messages={messages} submitMessage={submitMessage} username={username} setUsername={setUsername} clientID={CLIENT_ID} />
       <div>
         {allUsers.map((user) => <p key={user.clientId}>{user.username || user.defaultUsername}</p>)}
       </div>
-      <Chat messages={messages} submitMessage={submitMessage} username={username} setUsername={setUsername} />
     </div>
   )
 }
