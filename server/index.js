@@ -30,25 +30,31 @@ wss.on('connection', function connection(ws, req) {
     });
 
     ws.on('message', function incoming(data, isBinary) {
+        const message = isBinary ? data : data.toString();
+        const parsedMessage = JSON.parse(message);
+
         wss.clients.forEach(function each(client) {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                const message = isBinary ? data : data.toString();
-                const parsedMessage = JSON.parse(message);
-
-                if (parsedMessage.type === 'message') {
+            if (client.readyState === WebSocket.OPEN) {
+                if (parsedMessage.type === 'card') {
                     const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
-                    if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username });
+                    if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username, cardValue: parsedMessage.cardValue });
                 }
 
-                if (parsedMessage.type === 'info') {
-                    if (!!parsedMessage.data.disconnectedUser) {
-                        allUsers = allUsers.filter((user) => user.clientId !== parsedMessage.data.disconnectedUser)
+                // Send to all clients except itself
+                if (client !== ws) {
+                    if (parsedMessage.type === 'message') {
+                        const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
+                        if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username });
                     }
-                }
 
-                client.send(message);
-                // console.log('data', data);
-                // console.log('data parsed', JSON.parse(data));
+                    if (parsedMessage.type === 'info') {
+                        if (!!parsedMessage.data.disconnectedUser) {
+                            allUsers = allUsers.filter((user) => user.clientId !== parsedMessage.data.disconnectedUser)
+                        }
+                    }
+
+                    client.send(message);
+                }
             }
         });
     });
