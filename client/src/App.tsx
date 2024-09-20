@@ -69,7 +69,6 @@ const App = () => {
 
     ws.onmessage = (e) => {
       const data: WebSocketData = JSON.parse(e.data);
-      console.log(data, 'data');
       if (data.type === 'message') {
         if (data.message === 'I just logged in!' || data.message === 'I disconnected!') getData();
         setMessages([data, ...messages]);
@@ -83,6 +82,10 @@ const App = () => {
         if (newStateCardsFlipped === false) setSelectedCard(undefined);
         setShouldCardsBeFlipped(newStateCardsFlipped);
       }
+    }
+
+    ws.onerror = (e) => {
+      console.error('Error connecting with Websocket', e);
     }
 
     return () => {

@@ -13,13 +13,6 @@ wss.on('connection', function connection(ws, req) {
     ws.clientId = client_id;
     ws.defaultUsername = default_username;
 
-    if (client_id === ws.clientId) {
-        allUsers.push({ id: ws.id, clientId: ws.clientId, defaultUsername: ws.defaultUsername });
-        allUsers = allUsers.filter((obj1, i, arr) =>
-            arr.findIndex(obj2 => (obj2.clientId === obj1.clientId)) === i
-        );
-    }
-
     ws.on('close', function onClose() {
         allUsers = allUsers.filter((user) => user.clientId !== ws.clientId)
     });
@@ -47,6 +40,12 @@ wss.on('connection', function connection(ws, req) {
 
                 if (client === ws) {
                     if (parsedMessage.type === 'get_data') {
+
+                        allUsers.push({ id: ws.id, clientId: ws.clientId, defaultUsername: ws.defaultUsername });
+                        allUsers = allUsers.filter((obj1, i, arr) =>
+                            arr.findIndex(obj2 => (obj2.clientId === obj1.clientId)) === i
+                        );
+
                         client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
                         client.send(JSON.stringify({ type: 'card_info', areCardsFlipped }));
                     }
