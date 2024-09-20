@@ -2,16 +2,23 @@ import type {User as UserType} from "../../App";
 import type {UsersListProps} from "./users-list";
 import Card from "../card/card";
 
-type UserProps = Pick<UsersListProps, 'selfSelectedCard' | 'lastCardEvent' | 'selfClientId'> & {
+type GetCardValueParams = Pick<UserProps, 'user' | 'shouldCardsBeFlipped' | 'selfSelectedCard'> & { isSelf: boolean; };
+
+const getCardValue = ({ user, shouldCardsBeFlipped, isSelf, selfSelectedCard }: GetCardValueParams) => {
+  if (isSelf) return selfSelectedCard;
+  if (shouldCardsBeFlipped) return user.cardValue || undefined;
+
+  return user.cardValue ? '...' : undefined;
+}
+
+type UserProps = Pick<UsersListProps, 'selfSelectedCard' | 'selfClientId' | 'shouldCardsBeFlipped'> & {
   user: UserType;
 }
 
-const User = ({ selfSelectedCard, selfClientId, user, lastCardEvent }: UserProps) => {
+const User = ({ selfSelectedCard, selfClientId, user, shouldCardsBeFlipped }: UserProps) => {
   const { clientId, username, defaultUsername } = user;
   const isSelf = clientId === selfClientId;
-  const cardEventValue = lastCardEvent && lastCardEvent.clientId === user.clientId ? lastCardEvent.value : undefined;
-  // TODO: true should be replaced with boolean to check if cards are flipped or hidden
-  const cardValue = isSelf && true ? selfSelectedCard : cardEventValue;
+  const cardValue = getCardValue({ user, shouldCardsBeFlipped, isSelf, selfSelectedCard });
   const usernameToShow = username || defaultUsername;
 
   return (

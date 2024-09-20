@@ -6,13 +6,13 @@ export type UsersListProps = {
   selfSelectedCard?: CardEvent['value'];
   selfClientId: string;
   allUsers: UserType[];
-  lastCardEvent?: CardEvent;
+  shouldCardsBeFlipped: boolean;
 };
 
-const UsersList = ({ selfSelectedCard, selfClientId, allUsers, lastCardEvent }: UsersListProps) => (
+const UsersList = ({ selfSelectedCard, selfClientId, allUsers, shouldCardsBeFlipped }: UsersListProps) => (
   <div className='users'>
     {allUsers.map((user) => (
-      <User key={user.clientId} selfClientId={selfClientId} user={user} selfSelectedCard={selfSelectedCard} lastCardEvent={lastCardEvent} />
+      <User key={user.clientId} selfClientId={selfClientId} user={user} selfSelectedCard={selfSelectedCard} shouldCardsBeFlipped={shouldCardsBeFlipped} />
     ))}
   </div>
 );

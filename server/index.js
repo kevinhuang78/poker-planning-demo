@@ -4,6 +4,7 @@ const url = require('url');
 const wss = new WebSocket.Server({ port: 8080 });
 
 let allUsers = [];
+let areCardsFlipped = false;
 
 wss.getUniqueID = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
 wss.on('connection', function connection(ws, req) {
@@ -22,6 +23,7 @@ wss.on('connection', function connection(ws, req) {
     wss.clients.forEach(function each(client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+            // client.send(JSON.stringify({ type: 'card_info', areCardsFlipped }));
         }
     });
 
@@ -37,7 +39,16 @@ wss.on('connection', function connection(ws, req) {
             if (client.readyState === WebSocket.OPEN) {
                 if (parsedMessage.type === 'card') {
                     const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
-                    if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username, cardValue: parsedMessage.cardValue });
+                    if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username, cardValue: parsedMessage.value });
+                    client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+                }
+
+                if (parsedMessage.type === 'card_info') {
+                    areCardsFlipped = parsedMessage.areCardsFlipped;
+                    if (parsedMessage.areCardsFlipped === false) {
+                        allUsers = allUsers.map((user) => ({ ...user, cardValue: undefined }));
+                    }
+                    client.send(message);
                 }
 
                 // Send to all clients except itself

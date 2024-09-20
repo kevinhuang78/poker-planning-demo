@@ -1,9 +1,9 @@
-import type {CardEvent} from "../../App";
+import type {CardValue} from "../../App";
 
 type CardProps = {
-  value: CardEvent['value'];
-  selectedCard?: CardEvent['value'];
-  onClick: (value: CardEvent['value']) => void;
+  value: CardValue;
+  selectedCard?: CardValue;
+  onClick: (value: CardValue) => void;
 };
 
 const Card = ({ value, onClick, selectedCard }: CardProps) => {
