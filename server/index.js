@@ -21,8 +21,11 @@ wss.on('connection', function connection(ws, req) {
     }
 
     wss.clients.forEach(function each(client) {
-        if (client === ws && client.readyState === WebSocket.OPEN) {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+        }
+
+        if (client === ws && client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ type: 'card_info', areCardsFlipped }));
         }
     });
@@ -37,12 +40,6 @@ wss.on('connection', function connection(ws, req) {
 
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
-                if (parsedMessage.type === 'card') {
-                    const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
-                    if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username, cardValue: parsedMessage.value });
-                    client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
-                }
-
                 if (parsedMessage.type === 'card_info') {
                     areCardsFlipped = parsedMessage.areCardsFlipped;
                     if (parsedMessage.areCardsFlipped === false) {
@@ -53,6 +50,12 @@ wss.on('connection', function connection(ws, req) {
 
                 // Send to all clients except itself
                 if (client !== ws) {
+                    if (parsedMessage.type === 'card') {
+                        const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
+                        if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username, cardValue: parsedMessage.value });
+                        client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+                    }
+
                     if (parsedMessage.type === 'message') {
                         const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
                         if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username });
