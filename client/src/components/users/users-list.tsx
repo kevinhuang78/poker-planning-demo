@@ -9,10 +9,10 @@ export type UsersListProps = {
   shouldCardsBeFlipped: boolean;
 };
 
-const UsersList = ({ selfSelectedCard, selfClientId, allUsers, shouldCardsBeFlipped }: UsersListProps) => (
+const UsersList = ({ selfClientId, allUsers, shouldCardsBeFlipped }: UsersListProps) => (
   <div className='users'>
     {allUsers.map((user) => (
-      <User key={user.clientId} selfClientId={selfClientId} user={user} selfSelectedCard={selfSelectedCard} shouldCardsBeFlipped={shouldCardsBeFlipped} />
+      <User key={user.clientId} selfClientId={selfClientId} user={user} shouldCardsBeFlipped={shouldCardsBeFlipped} />
     ))}
   </div>
 );

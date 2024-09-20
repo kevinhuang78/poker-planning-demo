@@ -29,6 +29,10 @@ const App = () => {
   const [selectedCard, setSelectedCard] = useState<CardEvent['value']>();
   const [shouldCardsBeFlipped, setShouldCardsBeFlipped] = useState(false);
 
+  const getData = () => {
+    ws.send(JSON.stringify({ type: 'get_data' } ));
+  };
+
   const submitMessage = (message: Pick<Message, 'username' | 'message'>) => {
     const sentMessage: Message = {...message, clientId: CLIENT_ID, type: 'message'};
     ws.send(JSON.stringify(sentMessage));
@@ -60,12 +64,16 @@ const App = () => {
   useEffect(() => {
     ws.onopen = () => {
       submitMessage({ username, message: 'I just logged in!' })
+      getData();
     }
 
     ws.onmessage = (e) => {
       const data: WebSocketData = JSON.parse(e.data);
       console.log(data, 'data');
-      if (data.type === 'message') setMessages([data, ...messages]);
+      if (data.type === 'message') {
+        if (data.message === 'I just logged in!' || data.message === 'I disconnected!') getData();
+        setMessages([data, ...messages]);
+      }
       if (data.type === 'info') {
         if (!!data.data.allUsers && JSON.stringify(data.data.allUsers) !== JSON.stringify(allUsers))
           setAllUsers(data.data.allUsers);
@@ -94,7 +102,7 @@ const App = () => {
   return (
     <div>
       <Chat messages={messages} submitMessage={submitMessage} username={username} setUsername={setUsername} clientID={CLIENT_ID} />
-      <UsersList selfClientId={CLIENT_ID} allUsers={allUsers} selfSelectedCard={selectedCard} shouldCardsBeFlipped={shouldCardsBeFlipped} />
+      <UsersList selfClientId={CLIENT_ID} allUsers={allUsers} shouldCardsBeFlipped={shouldCardsBeFlipped} />
       <div className="container">
         <a href="#" className="button button--pen">
           <div className="button__wrapper" onClick={shouldCardsBeFlipped ? onHideCards : onShowCards}>

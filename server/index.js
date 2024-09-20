@@ -20,16 +20,6 @@ wss.on('connection', function connection(ws, req) {
         );
     }
 
-    wss.clients.forEach(function each(client) {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
-        }
-
-        if (client === ws && client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ type: 'card_info', areCardsFlipped }));
-        }
-    });
-
     ws.on('close', function onClose() {
         allUsers = allUsers.filter((user) => user.clientId !== ws.clientId)
     });
@@ -46,16 +36,24 @@ wss.on('connection', function connection(ws, req) {
                         allUsers = allUsers.map((user) => ({ ...user, cardValue: undefined }));
                     }
                     client.send(message);
+                    client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+                }
+
+                if (parsedMessage.type === 'card') {
+                    const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
+                    if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username, cardValue: parsedMessage.value });
+                    client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+                }
+
+                if (client === ws) {
+                    if (parsedMessage.type === 'get_data') {
+                        client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+                        client.send(JSON.stringify({ type: 'card_info', areCardsFlipped }));
+                    }
                 }
 
                 // Send to all clients except itself
                 if (client !== ws) {
-                    if (parsedMessage.type === 'card') {
-                        const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
-                        if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username, cardValue: parsedMessage.value });
-                        client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
-                    }
-
                     if (parsedMessage.type === 'message') {
                         const userToReplace = allUsers.find(({ clientId }) => clientId === parsedMessage.clientId);
                         if (userToReplace) Object.assign(userToReplace, {...userToReplace, username: parsedMessage.username });

@@ -2,23 +2,23 @@ import type {User as UserType} from "../../App";
 import type {UsersListProps} from "./users-list";
 import Card from "../card/card";
 
-type GetCardValueParams = Pick<UserProps, 'user' | 'shouldCardsBeFlipped' | 'selfSelectedCard'> & { isSelf: boolean; };
+type GetCardValueParams = Pick<UserProps, 'user' | 'shouldCardsBeFlipped'> & { isSelf: boolean; };
 
-const getCardValue = ({ user, shouldCardsBeFlipped, isSelf, selfSelectedCard }: GetCardValueParams) => {
-  if (isSelf) return selfSelectedCard;
+const getCardValue = ({ user, shouldCardsBeFlipped, isSelf }: GetCardValueParams) => {
+  if (isSelf) return user.cardValue;
   if (shouldCardsBeFlipped) return user.cardValue || undefined;
 
   return user.cardValue ? '...' : undefined;
 }
 
-type UserProps = Pick<UsersListProps, 'selfSelectedCard' | 'selfClientId' | 'shouldCardsBeFlipped'> & {
+type UserProps = Pick<UsersListProps, 'selfClientId' | 'shouldCardsBeFlipped'> & {
   user: UserType;
 }
 
-const User = ({ selfSelectedCard, selfClientId, user, shouldCardsBeFlipped }: UserProps) => {
+const User = ({ selfClientId, user, shouldCardsBeFlipped }: UserProps) => {
   const { clientId, username, defaultUsername } = user;
   const isSelf = clientId === selfClientId;
-  const cardValue = getCardValue({ user, shouldCardsBeFlipped, isSelf, selfSelectedCard });
+  const cardValue = getCardValue({ user, shouldCardsBeFlipped, isSelf });
   const usernameToShow = username || defaultUsername;
 
   return (
