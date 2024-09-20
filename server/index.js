@@ -21,9 +21,9 @@ wss.on('connection', function connection(ws, req) {
     }
 
     wss.clients.forEach(function each(client) {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
+        if (client === ws && client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
-            // client.send(JSON.stringify({ type: 'card_info', areCardsFlipped }));
+            client.send(JSON.stringify({ type: 'card_info', areCardsFlipped }));
         }
     });
 
