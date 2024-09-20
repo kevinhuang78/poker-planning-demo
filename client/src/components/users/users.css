@@ -30,3 +30,6 @@
 .user-no-card-selected {
     text-align: center;
 }
+
+/* Stats */
+.users-stats > p { width: 100%; text-align: center }
