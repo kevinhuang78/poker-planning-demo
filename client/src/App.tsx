@@ -4,6 +4,8 @@ import Chat from "./components/chat/chat";
 import CardsList from "./components/card/cards-list";
 import UsersList from "./components/users/users-list";
 
+import './app.css';
+
 // https://stackoverflow.com/a/44078785
 const guid = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
 
@@ -68,7 +70,11 @@ const App = () => {
         if (!!data.data.allUsers && JSON.stringify(data.data.allUsers) !== JSON.stringify(allUsers))
           setAllUsers(data.data.allUsers);
       }
-      if (data.type === 'card_info') setShouldCardsBeFlipped(data.areCardsFlipped);
+      if (data.type === 'card_info') {
+        const newStateCardsFlipped = data.areCardsFlipped;
+        if (newStateCardsFlipped === false) setSelectedCard(undefined);
+        setShouldCardsBeFlipped(newStateCardsFlipped);
+      }
     }
 
     return () => {
@@ -89,12 +95,26 @@ const App = () => {
     <div>
       <Chat messages={messages} submitMessage={submitMessage} username={username} setUsername={setUsername} clientID={CLIENT_ID} />
       <UsersList selfClientId={CLIENT_ID} allUsers={allUsers} selfSelectedCard={selectedCard} shouldCardsBeFlipped={shouldCardsBeFlipped} />
-      <div>
-        {shouldCardsBeFlipped ? (
-          <button onClick={onHideCards}>Hide the cards</button>
-        ) : (
-          <button onClick={onShowCards}>Show the cards</button>
-        )}
+      <div className="container">
+        <a href="#" className="button button--pen">
+          <div className="button__wrapper" onClick={shouldCardsBeFlipped ? onHideCards : onShowCards}>
+            <span className="button__text">{shouldCardsBeFlipped ? 'HIDE' : 'SHOW'}</span>
+          </div>
+          <div className="characterBox">
+            <div className="character wakeup">
+              <div className="character__face"></div>
+              <div className="charactor__face2"></div>
+            </div>
+            <div className="character wakeup">
+              <div className="character__face"></div>
+              <div className="charactor__face2"></div>
+            </div>
+            <div className="character">
+              <div className="character__face"></div>
+              <div className="charactor__face2"></div>
+            </div>
+          </div>
+        </a>
       </div>
       <CardsList setSelectedCard={setCard} selectedCard={selectedCard} shouldCardsBeFlipped={shouldCardsBeFlipped} />
     </div>
