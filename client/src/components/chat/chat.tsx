@@ -40,7 +40,7 @@ const Chat = ({ messages, submitMessage, username, setUsername, clientID }: Chat
 
         <div className='chat-list'>
           <ul>
-            {messages.reverse().map((message, index) =>
+            {messages.map((message, index) =>
               <li key={index} className={message.clientId === clientID ? 'recipient' : 'sender'}>
                 <b>{message.username}:</b> <em>{message.message}</em>
               </li>
