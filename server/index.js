@@ -49,6 +49,8 @@ wss.on('connection', function connection(ws, req) {
                     client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
                 }
 
+                if (parsedMessage.type === 'message') client.send(JSON.stringify({ type: 'info', data: { allUsers } }));
+
                 if (client === ws) {
                     if (parsedMessage.type === 'get_data') {
 
