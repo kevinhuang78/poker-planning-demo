@@ -1,7 +1,18 @@
 const WebSocket = require('ws');
 const url = require('url');
+const https = require('https');
+const fs = require('fs');
+const dotenv = require('dotenv').config();
+const express = require('express');
+const app = express();
+const isDev = dotenv.parsed.NODE_ENV === 'development';
+const port = dotenv.parsed.PORT;
 
-const wss = new WebSocket.Server({ port: 8080 });
+const server = isDev ? https.createServer({
+    key: fs.readFileSync('localhost.key'),
+    cert: fs.readFileSync('localhost.cert')
+}, app).listen(port) : undefined;
+const wss = new WebSocket.Server({ server });
 
 let allUsers = [];
 let areCardsFlipped = false;

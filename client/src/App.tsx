@@ -11,7 +11,7 @@ const guid = () => Date.now().toString(36) + Math.random().toString(36).substrin
 
 const CLIENT_ID = guid();
 const DEFAULT_USERNAME = `user-${guid()}`;
-const URL = `ws://${import.meta.env.VITE_WS_URL}?client_id=${CLIENT_ID}&default_username=${DEFAULT_USERNAME}`;
+const URL = `wss://${import.meta.env.VITE_WS_URL}?client_id=${CLIENT_ID}&default_username=${DEFAULT_USERNAME}`;
 
 export type CardValue = number | '?' | 'pass' | '...';
 export type User = { clientId: string; username?: string; defaultUsername: string; cardValue?: CardValue; }

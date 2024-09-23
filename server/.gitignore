@@ -1,2 +1,5 @@
 node_modules
 .vercel
+localhost.cert
+localhost.key
+.env
