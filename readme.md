@@ -13,3 +13,4 @@ With another terminal:
 # Deployment process
 
 - Client side is automatically done with Vercel every time someone push on `main`
+- Server side is automatically done with [Render](https://dashboard.render.com/) every time someone push on `main`

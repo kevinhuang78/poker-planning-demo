@@ -8,11 +8,11 @@ const app = express();
 const isDev = dotenv.parsed.NODE_ENV === 'development';
 const port = dotenv.parsed.PORT;
 
-const server = isDev ? https.createServer({
+const server = https.createServer({
     key: fs.readFileSync('localhost.key'),
     cert: fs.readFileSync('localhost.cert')
-}, app).listen(port) : undefined;
-const wss = new WebSocket.Server({ server });
+}, app).listen(port);
+const wss = new WebSocket.Server(isDev ? { server } : { port });
 
 let allUsers = [];
 let areCardsFlipped = false;
