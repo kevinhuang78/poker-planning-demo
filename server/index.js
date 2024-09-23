@@ -6,7 +6,7 @@ const dotenv = require('dotenv').config();
 const express = require('express');
 const app = express();
 const isDev = dotenv.parsed.NODE_ENV === 'development';
-const port = dotenv.parsed.PORT;
+const port = dotenv.parsed.PORT || 8443;
 
 const server = isDev ? https.createServer({
     key: fs.readFileSync('localhost.key'),
