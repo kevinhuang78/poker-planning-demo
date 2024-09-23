@@ -5,7 +5,7 @@ import './users.css';
 const CARD_VALUES = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
 
 const getCardValuesStats = (allUsers: UsersListProps['allUsers']) => {
-  // @ts-ignore
+  // @ts-expect-error TS does not understand card value is always a number because of the filter
   const allCardValues: number[] = allUsers.filter((user) => typeof user.cardValue === 'number').map((user) => user.cardValue);
   const numberOfUserThatVoted = allCardValues.length;
   const sumOfAll = allCardValues.reduce(

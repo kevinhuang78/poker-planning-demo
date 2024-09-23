@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useCallback} from "react";
 
 import Chat from "./components/chat/chat";
 import CardsList from "./components/card/cards-list";
@@ -29,37 +29,38 @@ const App = () => {
   const [selectedCard, setSelectedCard] = useState<CardEvent['value']>();
   const [shouldCardsBeFlipped, setShouldCardsBeFlipped] = useState(false);
 
-  const getData = () => {
+  const getData = useCallback(() => {
     ws.send(JSON.stringify({ type: 'get_data' } ));
-  };
+  }, [ws]);
 
-  const submitMessage = (message: Pick<Message, 'username' | 'message'>) => {
+  const submitMessage = useCallback((message: Pick<Message, 'username' | 'message'>) => {
     const sentMessage: Message = {...message, clientId: CLIENT_ID, type: 'message'};
     ws.send(JSON.stringify(sentMessage));
     setMessages([sentMessage, ...messages]);
-  }
+  }, [messages, ws])
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     ws.send(JSON.stringify({ type: 'info', data: { disconnectedUser: CLIENT_ID } }));
     submitMessage({ username, message: 'I disconnected!' });
-  };
+  }, [submitMessage, username, ws]);
 
-  const setCard = (cardValue: CardEvent['value']) => {
+  const setCard = useCallback((cardValue: CardEvent['value']) => {
     setSelectedCard(cardValue)
     ws.send(JSON.stringify({ type: 'card', clientId: CLIENT_ID, username, value: cardValue } ));
-  };
+  }, [username, ws]);
 
-  const onHideCards = () => {
+  const onHideCards = useCallback(() => {
     const dataSent: WebSocketData = { type: 'card_info', areCardsFlipped: false };
     setSelectedCard(undefined);
     ws.send(JSON.stringify(dataSent));
     submitMessage({ username, message: "I'm hiding the cards!" });
-  };
-  const onShowCards = () => {
+  }, [submitMessage, username, ws]);
+
+  const onShowCards = useCallback(() => {
     const dataSent: WebSocketData = { type: 'card_info', areCardsFlipped: true };
     ws.send(JSON.stringify(dataSent));
     submitMessage({ username, message: "I'm showing the cards!" });
-  };
+  }, [submitMessage, username, ws]);
 
   useEffect(() => {
     ws.onopen = () => {
@@ -94,13 +95,13 @@ const App = () => {
         setWs(new WebSocket(URL));
       }
     }
-  }, [ws.onmessage, ws.onopen, ws.onclose, messages]);
+  }, [allUsers, getData, onClose, submitMessage, username, ws, messages]);
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => {
       onClose();
     });
-  }, []);
+  }, [onClose]);
 
   return (
     <div>
