@@ -8,10 +8,10 @@ const app = express();
 const isDev = dotenv.parsed.NODE_ENV === 'development';
 const port = dotenv.parsed.PORT;
 
-const server = https.createServer({
+const server = isDev ? https.createServer({
     key: fs.readFileSync('localhost.key'),
     cert: fs.readFileSync('localhost.cert')
-}, app).listen(port);
+}, app).listen(port) : undefined;
 const wss = new WebSocket.Server(isDev ? { server } : { port });
 
 let allUsers = [];
