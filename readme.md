@@ -12,8 +12,12 @@ With another terminal:
 
 # Deployment process
 
-- Client side is automatically done with Vercel every time someone push on `main`
-- Server side is automatically done with [Render](https://dashboard.render.com/) every time someone push on `main`
+- Client side is automatically done with [Vercel](https://vercel.com/) every time someone push on `main`
+- Server side is automatically done with [Render](https://render.com/) every time someone push on `main`
 
 # Demo
+
+To launch the demo, you need to "wake up" the server because I'm using Render on free plan so the server is sleeping until you use it
+What you need to do is simply to go to this URL: https://poker-planning-demo-server.onrender.com/
+
 URL of demo: https://poker-planning-demo-client.vercel.app/
