@@ -17,7 +17,8 @@ With another terminal:
 
 # Demo
 
-To launch the demo, you need to "wake up" the server because I'm using Render on free plan so the server is sleeping until you use it
+To launch the demo, you need to "wake up" the server because I'm using Render on free plan so the server is sleeping until you use it.
+
 What you need to do is simply to go to this URL: https://poker-planning-demo-server.onrender.com/
 
 URL of demo: https://poker-planning-demo-client.vercel.app/
